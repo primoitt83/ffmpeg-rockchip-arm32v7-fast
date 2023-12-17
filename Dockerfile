@@ -1,0 +1,25 @@
+FROM alpine:3.18.5
+
+RUN apk add --no-cache \
+  ca-certificates \
+  gettext \
+  openssl \
+  pcre \
+  curl \
+  alsa-utils
+
+# Cleanup.
+RUN rm -rf /var/cache/* /tmp/*
+
+RUN mkdir /usr/lib/pulseaudio
+
+COPY ./ffmpeg/ffmpeg /usr/local/bin/ffmpeg
+COPY ./ffmpeg/ffprobe /usr/local/bin/ffprobe
+COPY ./usr_lib/. /usr/lib
+COPY ./usr_local_lib/. /usr/local/lib
+COPY ./usr_lib_pulseaudio/. /usr/lib/pulseaudio
+
+RUN chmod +x /usr/local/bin/ffmpeg
+RUN chmod +x /usr/local/bin/ffprobe
+
+CMD ffmpeg -buildconf
